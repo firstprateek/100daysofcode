@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Ball Game</title>
+  <style>
+    #game-conatiner {
+      height: 100vh;
+      background-color: darkslategrey;
+      display: grid;
+      align-items: center;
+      justify-items: center;
+      grid-gap: 10px 10px;
+      grid-template:
+        "score1 moves score2"1fr "playground playground playground"2fr / 30% 40% 30%;
+    }
+
+    .score-counter {
+      background-color: brown;
+      width: 80%;
+      height: 50%;
+    }
+
+    .score1 {
+      grid-area: score1;
+    }
+
+    .score2 {
+      grid-area: score2;
+    }
+
+    .moves-counter {
+      background-color: pink;
+      grid-area: moves;
+      width: 80%;
+      height: 50%;
+    }
+
+    #box-container {
+      grid-area: playground;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      background-color: bisque;
+      height: 90%;
+      width: 90%;
+    }
+
+    .box {
+      background-color: burlywood;
+      width: 25%;
+      height: 80%;
+      min-width: 250px;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .ball {
+      background-color: yellow;
+      width: 50px;
+      height: 50px;
+      margin: 5px;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="game-conatiner">
+    <div class="score-counter score1"></div>
+    <div class="moves-counter"></div>
+    <div class="score-counter score2"></div>
+    <div id="box-container">
+      <div id="box1" class="box">
+        <div class="ball" draggable="true"></div>
+        <div class="ball" draggable="true"></div>
+        <div class="ball" draggable="true"></div>
+      </div>
+
+      <div id="box2" class="box">
+      </div>
+    </div>
+  </div>
+  <script>
+    let dragged;
+    let movesCount = 0;
+    let startBox;
+
+
+    function updateCount() {
+      console.log(`left box counter: ${document.querySelector("#box1").children.length}`);
+      console.log(`right box counter: ${document.querySelector("#box2").children.length}`);
+    }
+
+    /* events fired on the draggable target */
+    document.addEventListener("drag", function (event) {
+
+    }, false);
+
+    document.addEventListener("dragstart", function (event) {
+      dragged = event.target;
+      console.log(dragged);
+      startBox = event.target.Parent;
+      event.target.style.opacity = 0.5;
+    }, false)
+
+    document.addEventListener("dragend", function (event) {
+      event.target.style.opacity = "";
+    }, false);
+
+    document.addEventListener("dragover", function (event) {
+      // prevent default to allow drop
+      event.preventDefault();
+    }, false);
+
+    document.addEventListener("dragenter", function (event) {
+      // highlight potential drop target when the draggable element enters it
+      if (event.target.className == "box") {
+        event.target.style.backgroundColor = "purple";
+      }
+
+    }, false);
+
+    document.addEventListener("dragleave", function (event) {
+      if (event.target.className == "box") {
+        event.target.style.backgroundColor = "burlywood";
+      }
+    }, false)
+
+    document.addEventListener("drop", function (event) {
+      event.preventDefault();
+
+      if (event.target.className == "box") {
+        event.target.style.backgroundColor = "burlywood";
+        event.target.appendChild(dragged);
+        dragged = "";
+
+        if (event.target !== startBox) {
+          movesCount++;
+          console.log(movesCount);
+        }
+        startBox = "";
+        updateCount();
+      }
+    }, false)
+
+  </script>
+</body>
+
+</html>
